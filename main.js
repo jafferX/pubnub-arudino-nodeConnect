@@ -12,7 +12,7 @@ var serialport = require ('serialport');
 //--------------------------------------------------------------
 //serial port config
 //--------------------------------------------------------------
-var portName = 'COM3'; //switch com3
+var portName = 'COM3'; //switch com3, usb connected right now. 
 serialport.on('error',function(error) {
 	if (error)
 	{
@@ -20,6 +20,7 @@ serialport.on('error',function(error) {
     }
 });
 
+//serial port configuration settings
 var sp = new serialport.SerialPort(portName,{
     baudRate: 9600,
     dataBits: 8,
@@ -32,7 +33,7 @@ var sp = new serialport.SerialPort(portName,{
 //--------------------------------------------------------------
 //setting up database
 //--------------------------------------------------------------
-db = new Object();
+db = new Object(); // new database object
 db.data = new nedb({filename: './data.json',autoload: true});
 db.avg = new nedb({filename: './avg.json', autoload: true});
 
@@ -51,7 +52,7 @@ db.avg.loadDatabase(function (err) {
 //----------------------------------------------------------------
 queryDatabase(db);
 
-
+	//serial port is turned on, once data is extracted then message is published onto to data stream
 	sp.on('data', function(data) {
 		console.log(data);
 		var message = {"humid" : 10, "temperature" : data};
@@ -81,6 +82,7 @@ queryDatabase(db);
 //--------------------------------------------
 //subscribing message from pubnub
 //--------------------------------------------
+//subscribed to data stream and collects data messages and organizes them into a db
 pubnub.subscribe({
 	channel : "Channel-f0jvdckpa",
 	callback : function (message) {
