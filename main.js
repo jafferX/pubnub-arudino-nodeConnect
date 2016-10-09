@@ -1,9 +1,10 @@
 //-----------------------------------------------------------
 //dependenices 
 //-----------------------------------------------------------
+var config = require('./config.js');
 var pubnub = require('pubnub')({
-	publish_key :"",
-	subscribe_key : ""
+	publish_key : config.publishing_key,
+	subscribe_key : config.subscribing_key
 });
 var nedb = require ('nedb');
 var serialport = require ('serialport');
